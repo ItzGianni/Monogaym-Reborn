@@ -2,23 +2,31 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Monogaym_Reborn {
-    internal class Piper: IDrawable, IUpdatable {
+    internal class Piper : IDrawable, IUpdateable {
 
         protected Texture2D tex;
         protected Vector2 position;
         protected Vector2 velocity;
         protected float maxSpeed;
 
-        public Piper() {
+        public event EventHandler<EventArgs> EnabledChanged;
+        public event EventHandler<EventArgs> UpdateOrderChanged;
+
+        public bool Enabled => true;
+        public int UpdateOrder => 1;
+
+        public Piper(Vector2 position = default) {
+            this.position = position;
             maxSpeed = 5f;
             DrawManager.AddItem(this);
             UpdateManager.AddItem(this);
         }
 
-        public void LoadContent(ContentManager cm) {
-            tex = cm.Load<Texture2D>("piper96");
+        public void LoadContent() {
+            tex = Resources.GetTexture("piper96");
         }
 
         public void Input() {
@@ -42,7 +50,7 @@ namespace Monogaym_Reborn {
             }
         }
 
-        public void Update() {
+        public void Update(GameTime gameTime) {
             position += velocity;
         }
 

@@ -1,20 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Monogaym_Reborn {
     internal static class UpdateManager {
-        public static List<IUpdatable> Items;
+        public static List<IUpdateable> Items;
 
         static UpdateManager() {
-            Items = new List<IUpdatable>();
+            Items = new List<IUpdateable>();
         }
 
-        public static void AddItem(IUpdatable item) {
+        public static void AddItem(IUpdateable item) {
             Items.Add(item);
         }
 
-        public static void UpdateAll() {
-            foreach (IUpdatable item in Items) {
-                item.Update();
+        public static void RemoveItem(IUpdateable item) {
+            Items.Remove(item);
+        }
+
+        public static void UpdateAll(GameTime gameTime) {
+            for (int i = 0; i < Items.Count; i++) {
+                Items[i].Update(gameTime);
             }
         }
     }

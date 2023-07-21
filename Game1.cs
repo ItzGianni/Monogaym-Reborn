@@ -7,38 +7,47 @@ namespace Monogaym_Reborn {
         public static GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Piper _ball;
+        private Piper _piper;
+
+        public static int ScreenWidth { get { return _graphics.PreferredBackBufferWidth; } }
+        public static int ScreenHeight { get { return _graphics.PreferredBackBufferHeight; } }
 
         public Game1() {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
+
         protected override void Initialize() {
-            _ball = new Piper();
+            Resources.Init(Content);
+            UIManager.Init(GraphicsDevice);
 
             base.Initialize();
+
+            UIManager.CreateNewIcon("piper96", "Piper", 25, 25, 75, 75);
+            UIManager.CreateNewIcon("piperb96", "Piper Spaghetti", 25, 150, 75, 75);
         }
 
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-            _ball.LoadContent(Content);
+
+            Resources.AddFont("font", "SpriteFont");
+            Resources.AddTexture("piper96", "piper96");
+            Resources.AddTexture("piperb96", "piperb96");
+
+            UIManager.LoadContentUI();
         }
 
-        protected void Input(GameTime gameTime) {
+        protected void Input() {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            _ball.Input();
         }
 
         protected override void Update(GameTime gameTime) {
-            Input(gameTime);
+            Input();
 
-            Window.Title = $"{1 / gameTime.ElapsedGameTime.TotalSeconds}";
-
-            UpdateManager.UpdateAll();
+            UpdateManager.UpdateAll(gameTime);
+            UIManager.UpdateAll(gameTime);
 
             base.Update(gameTime);
         }

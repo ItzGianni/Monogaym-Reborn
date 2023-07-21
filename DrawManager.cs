@@ -13,6 +13,10 @@ namespace Monogaym_Reborn {
             Items.Add(item);
         }
 
+        public static void RemoveItem(IDrawable item) {
+            Items.Remove(item);
+        }
+
         public static void DrawAll(SpriteBatch spriteBatch) {
             spriteBatch.Begin();
             foreach (IDrawable item in Items) {
