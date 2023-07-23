@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -18,6 +17,10 @@ namespace Monogaym_Reborn {
         public bool Enabled => true;
         public int UpdateOrder => 1;
 
+        public int DrawOrder => throw new NotImplementedException();
+
+        Effect fx;
+
         public Piper(Vector2 position = default) {
             this.position = position;
             maxSpeed = 5f;
@@ -27,6 +30,7 @@ namespace Monogaym_Reborn {
 
         public void LoadContent() {
             tex = Resources.GetTexture("piper96");
+            fx = Resources.GetEffect("test");
         }
 
         public void Input() {
@@ -51,11 +55,20 @@ namespace Monogaym_Reborn {
         }
 
         public void Update(GameTime gameTime) {
+            Input();
+
             position += velocity;
         }
 
         public void Draw(SpriteBatch sb) {
+            sb.End();
+            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
+            fx.CurrentTechnique.Passes[0].Apply();
             sb.Draw(tex, position, Color.White);
+
+            sb.End();
+            sb.Begin();
         }
     }
 }

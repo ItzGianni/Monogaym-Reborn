@@ -7,6 +7,8 @@ namespace Monogaym_Reborn {
 
         }
 
+        public override int DrawOrder { get; set; }
+
         public override void Draw(SpriteBatch _spriteBatch) {
             throw new System.NotImplementedException();
         }

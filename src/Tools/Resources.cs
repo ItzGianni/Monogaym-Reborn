@@ -6,11 +6,13 @@ namespace Monogaym_Reborn {
     static internal class Resources {
         public static Dictionary<string, SpriteFont> Fonts;
         public static Dictionary<string, Texture2D> Textures;
+        public static Dictionary<string, Effect> Effects;
         static ContentManager ContentManager;
 
         public static void Init(ContentManager cm) {
             Fonts = new Dictionary<string, SpriteFont>();
             Textures = new Dictionary<string, Texture2D>();
+            Effects = new Dictionary<string, Effect>();
 
             ContentManager = cm;
         }
@@ -29,6 +31,14 @@ namespace Monogaym_Reborn {
 
         public static Texture2D GetTexture(string key) {
             return Textures[key];
+        }
+
+        public static void AddEffect(string effectName, string effectPath) {
+            Effects.Add(effectName, ContentManager.Load<Effect>(effectPath));
+        }
+
+        public static Effect GetEffect(string key) {
+            return Effects[key];
         }
     }
 }

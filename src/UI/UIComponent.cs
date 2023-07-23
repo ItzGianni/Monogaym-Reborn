@@ -4,25 +4,30 @@ using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace Monogaym_Reborn {
+
+    enum UIComponentType { ConsoleIcon, ImageIcon, ConsoleWindow, ImageWindow }
+
     abstract internal class UIComponent : IDrawable, IUpdateable {
-        protected string name;
+        public string name;
+        public Rectangle mainRect;
+
         protected int x, y, width, height;
-
-        protected Rectangle mainRect;
-
+        protected UIComponentType type;
         protected SpriteFont font;
-
         protected bool wasMouseRightButtonReleased;
         protected bool wasMouseLeftButtonReleased;
-
         public event EventHandler<EventArgs> EnabledChanged;
         public event EventHandler<EventArgs> UpdateOrderChanged;
+        protected MouseState mouseState;
+        protected Point mousePosition;
 
         public bool Enabled { get; set; } = true;
         public int UpdateOrder { get; set; } = 1;
 
-        protected MouseState mouseState;
-        protected Point mousePosition;
+        public string Name { get => name; }
+        public UIComponentType Type => type;
+
+        public abstract int DrawOrder { get; set; }
 
         public UIComponent(string name = "Window", int x = 0, int y = 0, int width = 100, int height = 100) {
             this.name = name;
@@ -46,9 +51,10 @@ namespace Monogaym_Reborn {
 
         abstract public void Draw(SpriteBatch _spriteBatch);
 
-        virtual protected void Destroy() {
+        virtual public void Destroy() {
             Console.WriteLine("UI component detroyed");
             font = null;
+            UIManager.RemoveUIComponent(this);
             UpdateManager.RemoveItem(this);
             DrawManager.RemoveItem(this);
         }

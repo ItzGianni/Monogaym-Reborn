@@ -4,8 +4,7 @@ namespace Monogaym_Reborn {
     static internal class RandomGenerator {
         static Random random;
 
-        static RandomGenerator()
-        {
+        static RandomGenerator() {
             random = new Random();
         }
 

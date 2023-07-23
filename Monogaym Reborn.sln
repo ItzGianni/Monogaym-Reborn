@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monogaym Reborn", "Monogaym Reborn.csproj", "{D62A88DC-5C12-43A0-8028-D013DBEC65E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monogaym Reborn", "Monogaym Reborn.csproj", "{D62A88DC-5C12-43A0-8028-D013DBEC65E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3E0E6310-132D-4414-9B2D-17C52C1DE480}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
