@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Monogaym_Reborn {
-    internal class Icon : UIComponent {
+    abstract internal class Icon : UIComponent {
         protected Texture2D tex;
         protected UIComponentType winType;
         string texName;
@@ -11,19 +11,27 @@ namespace Monogaym_Reborn {
 
         public override int DrawOrder { get; set; }
 
-        public Icon(string texName, string name = "Icon", int x = 0, int y = 0, int width = 100, int height = 100, Color winColor = default) : base(name, x, y, width, height) {
+        public Icon(string texName, string name, int x, int y, int width, int height, Color winColor) :
+                base(name, x, y, width, height) {
+
+            this.width = width == 0 ? UIManager.DefaultIconSize.X : width;
+            this.height = height == 0 ? UIManager.DefaultIconSize.Y : height;
+
+            mainRect = new Rectangle(x, y, this.width, this.height);
+
             this.texName = texName;
             this.winColor = winColor;
-
-            type = UIComponentType.ConsoleIcon;
-            winType = UIComponentType.ConsoleWindow;
 
             DrawOrder = 1;
         }
 
         public override void Update(GameTime gameTime) {
             base.Update(gameTime);
-
+            foreach (UIComponent item in UIManager.UiComponents) {
+                if (item != this && ((int)item.Type >= 2 || (int)item.Type <= 3) && mainRect.Intersects(item.mainRect)) {
+                    return;
+                }
+            }
             if (mainRect.Contains(mousePosition)) {
                 if (mouseState.LeftButton == ButtonState.Pressed && wasMouseLeftButtonReleased) {
                     if (!UIManager.ContainsNameComponent(name, winType)) {

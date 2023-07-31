@@ -25,6 +25,9 @@
 /processorParam:TextureFormat=Color
 /build:ball.png
 
+#begin Commands.xml
+/copy:Commands.xml
+
 #begin ConsoleFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -37,6 +40,18 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:effecttest.fx
+
+#begin grass.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:grass.png
 
 #begin Images/055_kaltespur55.png
 /importer:TextureImporter
@@ -277,6 +292,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:piperb96.png
+
+#begin sand.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sand.png
 
 #begin SpriteFont.spritefont
 /importer:FontDescriptionImporter

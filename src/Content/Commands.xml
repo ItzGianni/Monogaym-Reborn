@@ -1,0 +1,34 @@
+<commands>
+    <command>
+      <name>info</name>
+      <action>display_text</action>
+      <outputtext>- This project was made by @GianniPapetti;  Made for fun o((-w-))o</outputtext>
+    </command>
+  <command>
+    <name>exit</name>
+    <action>close_window</action>
+    <outputtext>Succesfully closed window</outputtext>
+  </command>
+  <command>
+    <name>expand</name>
+    <action>resize_window</action>
+    <outputtext>Succesfully resized window</outputtext>
+  </command>
+  <command>
+    <name>setres</name>
+    <action>change_game_window_resolution</action>
+    <outputtext>Succesfully resized window</outputtext>
+  </command>
+  <command>
+    <name>list</name>
+    <action>show_list</action>
+  </command>
+  <command>
+    <name>open</name>
+    <action>show_uicomponent</action>
+  </command>
+  <command>
+    <name>help</name>
+    <action>show_commands</action>
+  </command>
+</commands>

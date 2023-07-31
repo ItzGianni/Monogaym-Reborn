@@ -2,7 +2,8 @@
 
 namespace Monogaym_Reborn {
     internal class ImageIcon : Icon {
-        public ImageIcon(int x = 0, int y = 0, int width = 100, int height = 100) : base("ksp1", "Image Window", x, y, width, height, Color.White) {
+        public ImageIcon(string texName, string name = "Icon", int x = 0, int y = 0, int width = 0, int height = 0, Color winColor = default) :
+                base(texName, name, x, y, width, height, winColor) {
             type = UIComponentType.ImageIcon;
             winType = UIComponentType.ImageWindow;
         }

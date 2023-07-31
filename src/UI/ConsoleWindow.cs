@@ -8,9 +8,15 @@ namespace Monogaym_Reborn {
             type = UIComponentType.ConsoleWindow;
 
             Point InputTextFieldPos = mainRect.Location + new Point(10, 25);
-            InputTextField = UIManager.CreateNewInputTextField(this, "InputTextField", InputTextFieldPos.X, InputTextFieldPos.Y, 75, 75);
+            InputTextField = UIManager.CreateNewInputTextField(this, "InputTextField", InputTextFieldPos.X, InputTextFieldPos.Y);
 
             DrawOrder = 3;
+        }
+
+        public override void LoadContent() {
+            base.LoadContent();
+
+
         }
 
         public override void Destroy() {

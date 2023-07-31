@@ -5,7 +5,7 @@ using System;
 
 namespace Monogaym_Reborn {
 
-    enum UIComponentType { ConsoleIcon, ImageIcon, ConsoleWindow, ImageWindow }
+    enum UIComponentType { ConsoleIcon, ImageIcon, ConsoleWindow, ImageWindow, InputText }
 
     abstract internal class UIComponent : IDrawable, IUpdateable {
         public string name;
@@ -23,20 +23,14 @@ namespace Monogaym_Reborn {
 
         public bool Enabled { get; set; } = true;
         public int UpdateOrder { get; set; } = 1;
-
         public string Name { get => name; }
         public UIComponentType Type => type;
-
         public abstract int DrawOrder { get; set; }
 
-        public UIComponent(string name = "Window", int x = 0, int y = 0, int width = 100, int height = 100) {
+        public UIComponent(string name, int x, int y, int width, int height) {
             this.name = name;
             this.x = x;
             this.y = y;
-            this.width = width;
-            this.height = height;
-
-            mainRect = new Rectangle(x, y, width, height);
 
             DrawManager.AddItem(this);
             UpdateManager.AddItem(this);

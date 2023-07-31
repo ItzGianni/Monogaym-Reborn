@@ -5,9 +5,11 @@ using Microsoft.Xna.Framework.Input;
 namespace Monogaym_Reborn {
     public class Game1 : Game {
         public static GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        public static Color backCol;
 
+        private SpriteBatch _spriteBatch;
         private Piper _piper;
+
 
         public static int ScreenWidth => _graphics.PreferredBackBufferWidth;
         public static int ScreenHeight => _graphics.PreferredBackBufferHeight;
@@ -27,19 +29,19 @@ namespace Monogaym_Reborn {
         }
 
         protected override void Initialize() {
-            Resources.Init(Content);
             UIManager.Init(GraphicsDevice);
+            Resources.Init(Content);
+            base.Initialize();
 
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
 
-            //_piper = new Piper();
+            backCol = Color.Aquamarine;
 
-            base.Initialize();
-
-            UIManager.CreateNewComponent(UIComponentType.ConsoleIcon, "Piper", "piper96", 25, 25, 75, 75, Color.Teal);
-            UIManager.CreateNewComponent(UIComponentType.ConsoleIcon, "Piper Spaghetti", "piperb96", 25, 150, 75, 75, Color.Thistle);
+            UIManager.CreateNewComponent(UIComponentType.ConsoleIcon, "Piper", "piper96", winColor: Color.Teal);
+            UIManager.CreateNewComponent(UIComponentType.ConsoleIcon, "Piper Spaghetti", "piperb96", winColor: Color.Thistle);
+            UIManager.CreateNewComponent(UIComponentType.ImageIcon, "ImageIcon", "ksp1", winColor: Color.MediumSpringGreen);
         }
 
         protected override void LoadContent() {
@@ -65,6 +67,9 @@ namespace Monogaym_Reborn {
             Resources.AddTexture("ksp12", "Images/062_kaltespur62");
             Resources.AddTexture("ksp13", "Images/061_kaltespur61");
             Resources.AddTexture("ksp14", "Images/055_kaltespur55");
+
+            Resources.AddTexture("grass", "grass");
+            Resources.AddTexture("sand", "sand");
 
             Resources.AddEffect("test", "effecttest");
 
@@ -92,7 +97,7 @@ namespace Monogaym_Reborn {
         }
 
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.Cyan);
+            GraphicsDevice.Clear(backCol);
 
             DrawManager.DrawAll(_spriteBatch);
 

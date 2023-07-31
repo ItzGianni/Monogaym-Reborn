@@ -11,7 +11,11 @@ namespace Monogaym_Reborn {
         protected List<Texture2D> texs;
 
         protected Rectangle barRect;
+        protected Rectangle resizeRect;
         protected Rectangle xRect;
+
+        protected bool isFullSized;
+        protected Rectangle originalRec;
 
         protected Point prevMousePos;
         protected bool canMoveWindow;
@@ -22,10 +26,16 @@ namespace Monogaym_Reborn {
         public Window(GraphicsDevice graphicsDevice, string name = "Window", int x = 0, int y = 0, int width = 100, int height = 100, Color windowColor = default) : base(name, x, y, width, height) {
             this.windowColor = windowColor;
 
+            this.width = width == 0 ? UIManager.DefaultWindowSize.X : width;
+            this.height = height == 0 ? UIManager.DefaultWindowSize.Y : height;
+
+            mainRect = new Rectangle(x, y, this.width, this.height);
+
             texs = new List<Texture2D> {
-                Utilities.CreateBlankTexture(graphicsDevice, width, height, windowColor),
-                Utilities.CreateBlankTexture(graphicsDevice, width, 30, Color.SlateGray),
-                Utilities.CreateBlankTexture(graphicsDevice, 15, 15, Color.OrangeRed)
+                Utilities.CreateBlankTexture(width, height, windowColor),   //main
+                Utilities.CreateBlankTexture(width, 30, Color.SlateGray),   //bar
+                Utilities.CreateBlankTexture(15, 15, Color.OrangeRed),      //x
+                Utilities.CreateBlankTexture(15, 15, Color.LightGray)       //resize
             };
         }
 
@@ -41,6 +51,9 @@ namespace Monogaym_Reborn {
             barRect = new Rectangle(mainRect.Location, mainRect.Size) {
                 Height = 25
             };
+            resizeRect = new Rectangle(xRect.Location, xRect.Size) {
+                X = xRect.X - 23
+            };
 
 
             if (mainRect.Contains(mousePosition)) {
@@ -50,8 +63,9 @@ namespace Monogaym_Reborn {
                 if (mouseState.RightButton == ButtonState.Pressed && canMoveWindow) {
                     isDragging = true;
                     bool valid = false;
-                    foreach (var item in UIManager.uiComponents) {
-                        if (item.GetHashCode() == GetHashCode()) continue;
+                    foreach (var item in UIManager.UiComponents) {
+                        if (item.GetHashCode() == GetHashCode())
+                            continue;
                         if ((int)item.Type >= 2 && (int)item.Type <= 3) {    //if it's a window
                             if (item.mainRect.Contains(mousePosition)) {    //if mouse is over 2 windows
                                 if (DrawOrder < item.DrawOrder) {           //if this window is lower than the other
@@ -75,6 +89,22 @@ namespace Monogaym_Reborn {
                 if (xRect.Contains(mousePosition)) {
                     if (mouseState.LeftButton == ButtonState.Pressed && wasMouseLeftButtonReleased) {
                         Destroy();      //if click on x, close window
+                    }
+                }
+                else if (resizeRect.Contains(mousePosition)) {
+                    if (mouseState.LeftButton == ButtonState.Pressed && wasMouseLeftButtonReleased) {
+                        if (isFullSized) {
+                            mainRect = originalRec;
+                        }
+                        else {
+                            originalRec = mainRect;
+                            mainRect.Location = Game1.ScreenSize / new Point(2) - (mainRect.Center - mainRect.Location);
+                            int wDelta = Game1.ScreenWidth - mainRect.Right;
+                            int hDelta = Game1.ScreenHeight - mainRect.Bottom;
+
+                            mainRect.Inflate(wDelta, hDelta);
+                        }
+                        isFullSized = !isFullSized;
                     }
                 }
             }
@@ -105,6 +135,7 @@ namespace Monogaym_Reborn {
             _spriteBatch.Draw(texs[0], mainRect, Color.White);
             _spriteBatch.Draw(texs[1], barRect, Color.White);
             _spriteBatch.Draw(texs[2], xRect, Color.White);
+            _spriteBatch.Draw(texs[3], resizeRect, Color.White);
             _spriteBatch.DrawString(font, $"{Type} - {name} - {DrawOrder}", mainRect.Location.ToVector2() + new Vector2(5, 2), Color.White);
         }
     }
