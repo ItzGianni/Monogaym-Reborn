@@ -12,7 +12,7 @@ namespace Monogaym_Reborn {
         public override int DrawOrder { get; set; }
 
         public Icon(string texName, string name, int x, int y, int width, int height, Color winColor) :
-                base(name, x, y, width, height) {
+                base(name, x, y) {
 
             this.width = width == 0 ? UIManager.DefaultIconSize.X : width;
             this.height = height == 0 ? UIManager.DefaultIconSize.Y : height;
@@ -23,6 +23,8 @@ namespace Monogaym_Reborn {
             this.winColor = winColor;
 
             DrawOrder = 1;
+
+            DrawManager.AddItem(this, 0);
         }
 
         public override void Update(GameTime gameTime) {
@@ -57,6 +59,11 @@ namespace Monogaym_Reborn {
                 mainRect.Bottom + font.MeasureString(name).Y * 0.5f
             );
             _spriteBatch.DrawString(font, name, stringPos, Color.WhiteSmoke);
+        }
+
+        public override void Destroy() {
+            base.Destroy();
+            DrawManager.RemoveItem(this, 0);
         }
     }
 }

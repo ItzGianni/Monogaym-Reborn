@@ -19,7 +19,9 @@ namespace Monogaym_Reborn {
 
         public static void UpdateAll(GameTime gameTime) {
             for (int i = 0; i < Items.Count; i++) {
-                Items[i].Update(gameTime);
+                if (Items[i].Enabled) {
+                    Items[i].Update(gameTime);
+                }
             }
         }
     }

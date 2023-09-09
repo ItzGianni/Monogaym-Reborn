@@ -9,8 +9,6 @@
 
 Texture2D SpriteTexture;
 
-sampler s0;
-
 sampler2D SpriteTextureSampler = sampler_state
 {
 	Texture = <SpriteTexture>;
@@ -25,11 +23,7 @@ struct VertexShaderOutput
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-	
-	float4 color = tex2D(s0, input.TextureCoordinates);
-	color.gb = 0.5f;
-	color.r = 0.0f;
-	return color;
+	return tex2D(SpriteTextureSampler,input.TextureCoordinates) * input.Color;
 }
 
 technique SpriteDrawing

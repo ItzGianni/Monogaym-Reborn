@@ -14,7 +14,7 @@ using System;
 
 namespace Monogaym_Reborn {
     class PerlinNoise {
-        
+
         static Random random = new Random();
 
         #region Demo

@@ -9,7 +9,7 @@ namespace Monogaym_Reborn {
         protected int imageIndex;
         protected bool wasRightPressed, wasLeftPressed;
 
-        public ImageWindow(GraphicsDevice graphicsDevice, string name = "Window", int x = 0, int y = 0, int width = 100, int height = 100, Color windowColor = default) : base(graphicsDevice, name, x, y, width, height, windowColor) {
+        public ImageWindow(string name = "Window", int x = 0, int y = 0, int width = 100, int height = 100, Color windowColor = default) : base(name, x, y, width, height, windowColor) {
             type = UIComponentType.ImageWindow;
 
             DrawOrder = 2;

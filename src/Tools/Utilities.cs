@@ -6,8 +6,12 @@ using System.Xml;
 namespace Monogaym_Reborn {
     static internal class Utilities {
 
-        public static Texture2D CreateBlankTexture(int width, int height, Color color) {
+        public static Texture2D CreateBlankTexture(int width, int height, Color color = default) {
+            width = width == 0 ? 1 : width;
+            height = height == 0 ? 1 : height;
             Texture2D texture = new Texture2D(UIManager.GraphicsDevice, width, height);
+            if (color == default)
+                color = Color.White;
 
             Color[] data = new Color[width * height];
             for (int i = 0; i < data.Length; i++) {
@@ -31,7 +35,7 @@ namespace Monogaym_Reborn {
             return tex;
         }
 
-        public static void ProcessCommand(string commandText, ref string outputText, ref Window win) {
+        public static void ProcessCommand(string commandText, ref string outputText, ref Window uiComponent) {
             string[] commandParts = commandText.Split("  ");
             string commandName = commandParts[0].ToLower();
 
@@ -56,7 +60,7 @@ namespace Monogaym_Reborn {
                             outputText = "- Command Invalid: too many arguments";
                         }
                         else {
-                            win.Destroy();
+                            uiComponent.Destroy();
                         }
                         break;
                     case "resize_window":
@@ -65,7 +69,7 @@ namespace Monogaym_Reborn {
                         }
                         else if (commandParts.Length == 3) {
                             if (int.TryParse(commandParts[1], out int x) && int.TryParse(commandParts[2], out int y)) {
-                                win.mainRect.Inflate(x, y);
+                                uiComponent.mainRect.Inflate(x, y);
                             }
                         }
                         else if (commandParts.Length == 4) {
@@ -111,10 +115,10 @@ namespace Monogaym_Reborn {
                             outputText = s;
                         }
                         else {
-
+                            outputText = "- Command Invalid: incorrect amount of arguments";
                         }
                         break;
-                    case "show_uicomponent":
+                    case "spawn_uicomponent":
                         if (commandParts.Length == 1) {
                             string s = string.Empty;
                             string[] uiTypes = Enum.GetNames(typeof(UIComponentType));
@@ -128,18 +132,26 @@ namespace Monogaym_Reborn {
                             string[] uiTypes = Enum.GetNames(typeof(UIComponentType));
                             for (int i = 0; i < uiTypes.Length; i++) {
                                 if (commandParts[1] == uiTypes[i].ToLower()) {    //if argument is one of ui types
-                                    if (commandParts[1].Contains("Icon")) {
-                                        UIManager.CreateNewComponent((UIComponentType)Enum.Parse(typeof(UIComponentType), uiTypes[i]));
-                                    }
-                                    else if (commandParts[1].Contains("Window")) {
-                                        UIManager.CreateNewComponent((UIComponentType)Enum.Parse(typeof(UIComponentType), uiTypes[i]));
+                                    switch ((UIComponentType)Enum.Parse(typeof(UIComponentType), uiTypes[i])) {
+                                        case UIComponentType.ConsoleIcon:
+                                            UIManager.CreateNewComponent((UIComponentType)Enum.Parse(typeof(UIComponentType), uiTypes[i]), name: uiTypes[i], texName: "piper96");
+                                            break;
+                                        case UIComponentType.ImageIcon:
+                                            UIManager.CreateNewComponent((UIComponentType)Enum.Parse(typeof(UIComponentType), uiTypes[i]), name: uiTypes[i], texName: "piperb96");
+                                            break;
+                                        case UIComponentType.GameIcon:
+                                            UIManager.CreateNewComponent((UIComponentType)Enum.Parse(typeof(UIComponentType), uiTypes[i]), name: uiTypes[i], texName: "piper32");
+                                            break;
+                                        default:
+                                            UIManager.CreateNewComponent((UIComponentType)Enum.Parse(typeof(UIComponentType), uiTypes[i]), name: uiTypes[i]);
+                                            break;
                                     }
                                 }
                             }
                             outputText = s;
                         }
                         else {
-
+                            outputText = "- Command Invalid: incorrect amount of arguments";
                         }
                         break;
                     case "show_commands":
@@ -155,5 +167,6 @@ namespace Monogaym_Reborn {
                 outputText = "- Command not recognized";
             }
         }
+
     }
 }

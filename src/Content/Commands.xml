@@ -25,7 +25,8 @@
   </command>
   <command>
     <name>open</name>
-    <action>show_uicomponent</action>
+    <action>spawn_uicomponent</action>
+    <outputtext>Succesfully opened uicomponent</outputtext>
   </command>
   <command>
     <name>help</name>

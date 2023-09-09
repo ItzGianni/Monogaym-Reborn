@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace Monogaym_Reborn {
@@ -14,6 +13,8 @@ namespace Monogaym_Reborn {
         public static Point DefaultIconSize;
         public static Point DefaultWindowSize;
         public static Point DefaultInputTextSize;
+        public static Point DefaultButtonSize;
+        public static Color DefaultColor;
 
         public static Point[,] IconPos;
         public static int iconSpacing;
@@ -26,6 +27,7 @@ namespace Monogaym_Reborn {
             DefaultIconSize = new Point(75, 75);
             DefaultWindowSize = new Point(600, 400);
             DefaultInputTextSize = new Point(100, 15);
+            DefaultButtonSize = new Point(150, 75);
             iconSpacing = 25;
 
             IconPos = new Point[
@@ -34,8 +36,10 @@ namespace Monogaym_Reborn {
             ];
         }
 
-        public static UIComponent CreateNewComponent(UIComponentType type, string name = "Window", string texName = "", int x = 0, int y = 0, int width = 0, int height = 0, Color winColor = default) {
+        public static UIComponent CreateNewComponent(UIComponentType type, string name = "UIComponent", string texName = "icon_placeholder", int x = 0, int y = 0, int width = 0, int height = 0, Color winColor = default) {
             UIComponent component = default;
+            if (winColor == default)
+                winColor = DefaultColor;
             switch (type) {
                 case UIComponentType.ConsoleIcon:
                     for (int i = 0; i < IconPos.GetLength(0); i++) {
@@ -69,12 +73,29 @@ namespace Monogaym_Reborn {
                     }
                 ImageEndLoop:
                     break;
+                case UIComponentType.GameIcon:
+                    for (int i = 0; i < IconPos.GetLength(0); i++) {
+                        for (int j = 0; j < IconPos.GetLength(1); j++) {
+                            if (IconPos[i, j] == Point.Zero) {
+                                Point p = new Point(
+                                    iconSpacing + (DefaultIconSize.X + iconSpacing) * i,
+                                    iconSpacing + (DefaultIconSize.Y + DefaultInputTextSize.Y + iconSpacing) * j
+                                );
+                                IconPos[i, j] = p;
+                                component = new GameIcon(texName, name, p.X, p.Y, width, height, winColor);
+                                goto GameEndLoop;
+                            }
+                        }
+                    }
+                GameEndLoop:
+                    break;
                 case UIComponentType.ConsoleWindow:
-                    component = new ConsoleWindow(GraphicsDevice, name, x, y, width, height, winColor);
+                    component = new ConsoleWindow(name, x, y, width, height, winColor);
                     break;
                 case UIComponentType.ImageWindow:
-                    component = new ImageWindow(GraphicsDevice, name, x, y, width, height, winColor);
+                    component = new ImageWindow(name, x, y, width, height, winColor);
                     List<Texture2D> images = new List<Texture2D>();
+                    #region le a bit furry images
                     //Texture2D tex = Resources.GetTexture("ksp2");
                     //images.Add(tex);
                     //tex = Resources.GetTexture("ksp3");
@@ -102,7 +123,7 @@ namespace Monogaym_Reborn {
                     //tex = Resources.GetTexture("ksp14");
                     //images.Add(tex);
                     //Texture2D tex = Utilities.CreateNoiseTexture(graphicsDevice, 250, 250);
-
+                    #endregion
 
                     Texture2D tex = PerlinNoise.GenerateGrayScaleImageWithNoise(250, 250, 6);
                     //images.Add(tex);
@@ -116,6 +137,12 @@ namespace Monogaym_Reborn {
                     images.Add(tex);
                     ((ImageWindow)component).LoadImages(images);
                     break;
+                case UIComponentType.GameWindow:
+                    component = new GameWindow("GameWindow", x, y, width, height, winColor);
+                    break;
+                case UIComponentType.Button:
+                    //component = new Button();
+                    break;
             }
             component.LoadContent();
             uiComponents.Add(component);
@@ -124,7 +151,14 @@ namespace Monogaym_Reborn {
             return component;
         }
 
-        public static InputTextField CreateNewInputTextField(Window win, string name = "Icon", int x = 0, int y = 0, int width = 0, int height = 0) {
+        public static UIComponent CreateNewCustomUIComponent(UIComponent uiComponent) {
+            UIComponent component = uiComponent;
+            component.LoadContent();
+            uiComponents.Add(component);
+            return component;
+        }
+
+        public static InputTextField CreateNewInputTextField(Window win, string name = "InputTextField", int x = 0, int y = 0, int width = 0, int height = 0) {
             InputTextField inpuTextField = new InputTextField(win, name, x, y, width, height);
             inpuTextField.LoadContent();
             uiComponents.Add(inpuTextField);
@@ -154,6 +188,12 @@ namespace Monogaym_Reborn {
 
         public static void RemoveUIComponent(UIComponent comp) {
             uiComponents.Remove(comp);
+        }
+
+        //public void AddUITextOnScreen()
+
+        public void Draw(SpriteBatch _spriteBatch) {
+
         }
     }
 }

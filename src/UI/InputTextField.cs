@@ -17,7 +17,7 @@ namespace Monogaym_Reborn {
         public override int DrawOrder { get => win.DrawOrder; set => win.DrawOrder = value; }
         public string InputText { get => inputText; set => inputText = value; }
 
-        public InputTextField(Window win, string name = "Window", int x = 0, int y = 0, int width = 0, int height = 0) : base(name, x, y, width, height) {
+        public InputTextField(Window win, string name = "Window", int x = 0, int y = 0, int width = 0, int height = 0) : base(name, x, y) {
             this.win = win;
 
             this.width = width == 0 ? UIManager.DefaultInputTextSize.X : width;
@@ -28,6 +28,7 @@ namespace Monogaym_Reborn {
             outputText = string.Empty;
             type = UIComponentType.InputText;
             color = Color.White;
+            DrawManager.AddItem(this, 1);
         }
 
         public override void LoadContent() {
@@ -80,8 +81,8 @@ namespace Monogaym_Reborn {
                         }
                         else if ((int)key.Key == 13) {
                             //enter pressed
-                            ExecuteCommand(inputText);
-                            //Utilities.ProcessCommand(inputText, ref outputText, ref win);
+                            //ExecuteCommand(inputText);
+                            Utilities.ProcessCommand(inputText, ref outputText, ref win);
                             inputText = "";
                         }
                         else if ((int)key.Key == 27) {

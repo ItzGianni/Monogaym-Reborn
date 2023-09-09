@@ -1,29 +1,30 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 
 namespace Monogaym_Reborn {
-    internal class Window : UIComponent {
+    abstract class Window : UIComponent {
 
         protected Color windowColor;
         protected List<Texture2D> texs;
 
+        public Rectangle usableRect;
         protected Rectangle barRect;
         protected Rectangle resizeRect;
         protected Rectangle xRect;
 
+        protected bool isFocused;
+
         protected bool isFullSized;
         protected Rectangle originalRec;
-
         protected Point prevMousePos;
         protected bool canMoveWindow;
         protected bool isDragging;
 
         public override int DrawOrder { get; set; }
 
-        public Window(GraphicsDevice graphicsDevice, string name = "Window", int x = 0, int y = 0, int width = 100, int height = 100, Color windowColor = default) : base(name, x, y, width, height) {
+        public Window(string name, int x, int y, int width, int height, Color windowColor) : base(name, x, y) {
             this.windowColor = windowColor;
 
             this.width = width == 0 ? UIManager.DefaultWindowSize.X : width;
@@ -31,12 +32,34 @@ namespace Monogaym_Reborn {
 
             mainRect = new Rectangle(x, y, this.width, this.height);
 
+            xRect = new Rectangle() {
+                X = mainRect.Right - 20,
+                Y = mainRect.Top + 5,
+                Width = 15,
+                Height = 15
+            };
+            barRect = new Rectangle(mainRect.Location, mainRect.Size) {
+                Height = 25
+            };
+            resizeRect = new Rectangle(xRect.Location, xRect.Size) {
+                X = xRect.X - 23
+            };
+            usableRect = new Rectangle() {
+                X = mainRect.X,
+                Y = mainRect.Y + barRect.Height,
+                Width = mainRect.Width,
+                Height = mainRect.Height - barRect.Height
+            };
+
             texs = new List<Texture2D> {
                 Utilities.CreateBlankTexture(width, height, windowColor),   //main
                 Utilities.CreateBlankTexture(width, 30, Color.SlateGray),   //bar
                 Utilities.CreateBlankTexture(15, 15, Color.OrangeRed),      //x
                 Utilities.CreateBlankTexture(15, 15, Color.LightGray)       //resize
             };
+
+            isFocused = true;
+            DrawManager.AddItem(this, 1);
         }
 
         public override void Update(GameTime gameTime) {
@@ -54,6 +77,12 @@ namespace Monogaym_Reborn {
             resizeRect = new Rectangle(xRect.Location, xRect.Size) {
                 X = xRect.X - 23
             };
+            usableRect = new Rectangle() {
+                X = mainRect.X,
+                Y = mainRect.Y + barRect.Height,
+                Width = mainRect.Width,
+                Height = mainRect.Height - barRect.Height
+            };
 
 
             if (mainRect.Contains(mousePosition)) {
@@ -61,6 +90,7 @@ namespace Monogaym_Reborn {
                     canMoveWindow = true;       //check to let dragging window pressing right mouse only from window itself
                 }
                 if (mouseState.RightButton == ButtonState.Pressed && canMoveWindow) {
+                    isFocused = true;
                     isDragging = true;
                     bool valid = false;
                     foreach (var item in UIManager.UiComponents) {
@@ -73,16 +103,16 @@ namespace Monogaym_Reborn {
                                 }
                             }
                             else {
-                                if (wasMouseRightButtonReleased) {//if it's trying to drag an alone window
+                                if (wasMouseRightButtonReleased) {      //if it's trying to drag an alone window
                                     valid = true;
                                 }
                             }
                         }
                     }
                     if (valid && isDragging) {
-                        if (DrawOrder < DrawManager.MaxDrawOrder) {
-                            DrawOrder = DrawManager.MaxDrawOrder + 1;       //get selected window to top
-                            DrawManager.Sort();
+                        if (DrawOrder < DrawManager.MaxWindowsDrawOrder) {
+                            DrawOrder = DrawManager.MaxWindowsDrawOrder + 1;       //get selected window to top
+                            DrawManager.Sort(1);
                         }
                     }
                 }
@@ -110,6 +140,9 @@ namespace Monogaym_Reborn {
             }
             else {
                 canMoveWindow = false;
+                if (!isDragging && mouseState.RightButton == ButtonState.Pressed) {
+                    isFocused = false;
+                }
             }
 
             if (isDragging) {
@@ -132,11 +165,17 @@ namespace Monogaym_Reborn {
         }
 
         public override void Draw(SpriteBatch _spriteBatch) {
-            _spriteBatch.Draw(texs[0], mainRect, Color.White);
-            _spriteBatch.Draw(texs[1], barRect, Color.White);
-            _spriteBatch.Draw(texs[2], xRect, Color.White);
-            _spriteBatch.Draw(texs[3], resizeRect, Color.White);
-            _spriteBatch.DrawString(font, $"{Type} - {name} - {DrawOrder}", mainRect.Location.ToVector2() + new Vector2(5, 2), Color.White);
+            Color c = isFocused ? Color.White : Color.Gray;
+            _spriteBatch.Draw(texs[0], mainRect, c);
+            _spriteBatch.Draw(texs[1], barRect, c);
+            _spriteBatch.Draw(texs[2], xRect, c);
+            _spriteBatch.Draw(texs[3], resizeRect, c);
+            _spriteBatch.DrawString(font, $"{Type} - {name} - {DrawOrder}", mainRect.Location.ToVector2() + new Vector2(5, 2), c);
+        }
+
+        public override void Destroy() {
+            base.Destroy();
+            DrawManager.RemoveItem(this, 1);
         }
     }
 }

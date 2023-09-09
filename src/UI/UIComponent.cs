@@ -5,7 +5,11 @@ using System;
 
 namespace Monogaym_Reborn {
 
-    enum UIComponentType { ConsoleIcon, ImageIcon, ConsoleWindow, ImageWindow, InputText }
+    enum UIComponentType {
+        ConsoleIcon, ImageIcon, GameIcon,
+        ConsoleWindow, ImageWindow, GameWindow,
+        InputText, Button
+    }
 
     abstract internal class UIComponent : IDrawable, IUpdateable {
         public string name;
@@ -27,13 +31,10 @@ namespace Monogaym_Reborn {
         public UIComponentType Type => type;
         public abstract int DrawOrder { get; set; }
 
-        public UIComponent(string name, int x, int y, int width, int height) {
+        public UIComponent(string name, int x, int y) {
             this.name = name;
             this.x = x;
             this.y = y;
-
-            DrawManager.AddItem(this);
-            UpdateManager.AddItem(this);
         }
 
         abstract public void LoadContent();
@@ -50,7 +51,6 @@ namespace Monogaym_Reborn {
             font = null;
             UIManager.RemoveUIComponent(this);
             UpdateManager.RemoveItem(this);
-            DrawManager.RemoveItem(this);
         }
     }
 }
